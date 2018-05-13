@@ -25,9 +25,18 @@ def update_friendships(graph, node, sigma):
         if graph.adj[node][neighbor]['weight']==0:
             remove_edge(node,neighbor)
 
+def make_friend(graph, node, p=0.1):
+    if random.rand()<p:
+        pass
+
+def sum_friend_weights(graph,node):
+    return sum([graph.adj[node][neighbor]['weight'] for neighbor in graph.adj[node]])
+
 def step_rand_walk(graph, node):
     #print(node)
-    sum_weights = sum([graph.adj[node][neighbor]['weight'] for neighbor in graph.adj[node]])
+    sum_weights = sum_friend_weights(graph, node)
+    if sum_weights==0:
+        return None
     li = [(neighbor, graph.adj[node][neighbor]['weight']/sum_weights) for neighbor in graph.adj[node]]
     #print(li)
     x = sample_wp(li)
