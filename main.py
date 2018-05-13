@@ -5,29 +5,48 @@ from utils import *
 class Person(object):
     #static variable
     population = 0
-    def __init__(self,id_num=None,ideo=None, capacity=10):
+    def __init__(self,id_num=None,ideo=None, capacity=10.0):
         self.id_num = id_num if id_num!=None else Person.population
         Person.population += 1
         self.ideo = ideo if ideo!=None else rand.uniform(-1,1)
         self.capacity = capacity
     def __eq__(self,other):
+        if not (isinstance(other,Person)):
+            return False
         return self.id_num==other.id_num
     def __hash__(self):
         return hash(self.id_num)
 
-def clamp(x,lo,hi):
+def clamp(x,lo=0,hi=1):
     return lo if x<lo else \
            hi if x>hi else x
 
-def update_friendships(graph, node, sigma):
+def update_friendships(graph, node, sigma=0.1):
+    dels = []
     for nbr in graph.adj[node]:
-        graph.adj[node][neighbor]['weight']= clamp(graph.adj[node][neighbor]['weight'] + rand.gauss(0,sigma))
-        if graph.adj[node][neighbor]['weight']==0:
-            remove_edge(node,neighbor)
+        graph.adj[node][nbr]['weight']= clamp(graph.adj[node][nbr]['weight'] + rand.gauss(0,sigma))
+        if graph.adj[node][nbr]['weight']==0:
+            dels +=[nbr]
+    for nbr in dels:
+        graph.remove_edge(node,nbr)
 
 def make_friend(graph, node, p=0.1):
-    if random.rand()<p:
-        pass
+    if rand.random()<p:
+        friend = sample(graph.nodes())
+    else:
+        f = step_rand_walk(graph,node)
+        if f==None:
+            return
+        friend = step_rand_walk(graph,f)
+        if friend==None:
+            return
+    if not (friend == None or node == friend or friend in graph.adj[node]):
+        graph.add_edge(node, friend, {'weight':0.5})
+        return friend
+
+def maybe_make_friend(graph, node, p=0.1):
+    if rand.random()<=(node.capacity - sum_friend_weights(graph,node))/node.capacity:
+        make_friend(graph,node,p)
 
 def sum_friend_weights(graph,node):
     return sum([graph.adj[node][neighbor]['weight'] for neighbor in graph.adj[node]])
@@ -42,6 +61,22 @@ def step_rand_walk(graph, node):
     x = sample_wp(li)
     #print("hi",x)
     return x
+
+def sample(li):
+    if len(li)==0:
+        return None
+    return li[rand.randint(0,len(li)-1)]
+
+def loop_step(graph):
+    for node in graph.nodes():
+        update_friendships(graph,node,0.1)
+        maybe_make_friend(graph,node,0.1)
+
+def init_graph(pop):
+    nodes = [Person() for i in range(pop)]
+    G=nx.Graph()
+    G.add_nodes_from(nodes)
+    return G
 
 def test():
     G = nx.Graph()
@@ -60,4 +95,9 @@ def test():
     print(Person.population)
     
 if __name__=='__main__':
-    test()
+    #test()
+    G=init_graph(10)
+    for t in range(100):
+        loop_step(G)
+        if t%10==0:
+            nx.draw(G)
