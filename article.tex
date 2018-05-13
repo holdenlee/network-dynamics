@@ -16,6 +16,17 @@
 \usepackage [autostyle, english = american]{csquotes}
 \MakeOuterQuote{"}  
 
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-\do\_\do.}
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks%  save the current one
+  \do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j%
+  \do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t%
+  \do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D%
+  \do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N%
+  \do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X%
+  \do\Y\do\Z\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9}
+
+
 \author{Ben Edelman, Sara Fridovich-Keil, Holden Lee}
 \title{Recommending Friends to Reduce Polarization}
 \begin{document}
@@ -29,7 +40,17 @@ Our goal is to simulate this ideological polarization of friendships in a random
 
 \section{Prior Work}
 
+Relevant prior research exists for modeling natural friendship networks and the influence of individual ideological views on such networks. Several friendship recommendation algorithms are also in common use among commercial online social networks. 
+
+In his book \textit{Social Self-Organization} \cite{helbing}, Helbing discusses how the distribution of opinions in a group of people can change over time as they influence each other and are preferentially influenced by those with similar opinions. Although Helbing does not explicitly represent a network of friendships, they do classify two possible global states that tend to arise in simulation: monoculture and "opinion clustering." Monoculture describes a distribution of opinions in which most individuals converge towards a single opinion over time, and "opinion clustering" describes a multimodal distribution of opinions in which most individuals converge to one of several opinions \cite{helbing}.
+
+
+
+
+
 \section{Methods}
+
+
 
 \section{Results}
 
@@ -40,7 +61,7 @@ Our goal is to simulate this ideological polarization of friendships in a random
 
 \bibitem{bakshy} E. Bakshy, S. Messing, and L. A. Adamic, "Exposure to ideologically diverse news and opinion on Facebook," \textit{Science}, vol. 348, iss. 6239, pp. 1130-1132, 2015.
 
-\bibitem{helbing} D. Helbing, \textit{Social Self-Organization}. Berlin: Springer Berlin, 2014, pp. 25-70.
+\bibitem{helbing} D. Helbing, \textit{Social Self-Organization}. Berlin: Springer Berlin, 2014.
 
 \bibitem{epstein} J. M. Epstein and R. Axtell, \textit{Growing Artificial Societies: Social Science from the Bottom Up}. Washington, DC: Brookings Institution Press, 1996.
 
@@ -54,12 +75,9 @@ Our goal is to simulate this ideological polarization of friendships in a random
 
 \bibitem{chaoji} V. Chaoji, S. Ranu, R. Rastogi, and R. Bhatt, "Recommendations to boost content spread in social networks," in \textit{Proceedings of the 21st International Conference on the World Wide Web}, 16-20 April 2012, Lyon, France.
 
+\bibitem{facebook} Facebook, "Finding Friends and People You May Know" [Online]. Available: \url{https://www.facebook.com/help/www/336320879782850}. [Accessed: 13-May-2018].
 
-
-
-
-
-
+\bibitem{ricci} F. Ricci, L. Rokach, B. Shapira, and P. Kantor, Eds., \textit{Recommender Systems Handbook}. New York, NY: Springer, 2011.
 
 
 
