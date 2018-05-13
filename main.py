@@ -5,10 +5,11 @@ from utils import *
 class Person(object):
     #static variable
     population = 0
-    def __init__(self,id_num=None,ideo=None):
+    def __init__(self,id_num=None,ideo=None, capacity=10):
         self.id_num = id_num if id_num!=None else Person.population
         Person.population += 1
         self.ideo = ideo if ideo!=None else rand.uniform(-1,1)
+        self.capacity = capacity
     def __eq__(self,other):
         return self.id_num==other.id_num
     def __hash__(self):
@@ -20,7 +21,9 @@ def clamp(x,lo,hi):
 
 def update_friendships(graph, node, sigma):
     for nbr in graph.adj[node]:
-        graph.adj[node][neighbor]['weight']+=rand.gauss(0,sigma)
+        graph.adj[node][neighbor]['weight']= clamp(graph.adj[node][neighbor]['weight'] + rand.gauss(0,sigma))
+        if graph.adj[node][neighbor]['weight']==0:
+            remove_edge(node,neighbor)
 
 def step_rand_walk(graph, node):
     #print(node)
@@ -42,6 +45,7 @@ def test():
     #print(G.adj)
     for t in range(15):
         print(step_rand_walk(G,step_rand_walk(G,1)))
+    nx.draw(G)
     p=Person()
     q=Person()
     print(Person.population)
