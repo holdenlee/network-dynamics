@@ -5,10 +5,10 @@ from utils import *
 class Person(object):
     #static variable
     population = 0
-    def __init__(self,id_num=-1,ideo=-1):
-        self.id_num = id_num if id_num!=1 else Person.population
+    def __init__(self,id_num=None,ideo=None):
+        self.id_num = id_num if id_num!=None else Person.population
         Person.population += 1
-        self.ideo = ideo if ideo!=-1 else rand.random()
+        self.ideo = ideo if ideo!=None else rand.random()
     def __eq__(self,other):
         return self.id_num==other.id_num
     def __hash__(self):
