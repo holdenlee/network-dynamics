@@ -3,11 +3,11 @@ import random as rand
 from utils import *
 
 class Person(object):
-    #static method
+    #static variable
     population = 0
     def __init__(self,id_num=-1,ideo=-1):
-        self.id_num = id_num if id_num!=1 else population
-        population += 1
+        self.id_num = id_num if id_num!=1 else Person.population
+        Person.population += 1
         self.ideo = ideo if ideo!=-1 else rand.random()
     def __eq__(self,other):
         return self.id_num==other.id_num
@@ -42,6 +42,9 @@ def test():
     #print(G.adj)
     for t in range(15):
         print(step_rand_walk(G,step_rand_walk(G,1)))
+    p=Person()
+    q=Person()
+    print(Person.population)
     
 if __name__=='__main__':
     test()
