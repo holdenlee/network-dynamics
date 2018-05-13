@@ -10,6 +10,8 @@ class Person(object):
         self.id_num = id_num if id_num!=None else Person.population
         Person.population += 1
         self.ideo = ideo if ideo!=None else rand.uniform(-1,1)
+        #2*randint(0,1)-1
+        #rand.uniform(-1,1)
         self.capacity = capacity
     def __eq__(self,other):
         if not (isinstance(other,Person)):
@@ -46,9 +48,9 @@ def get_potential_friend(graph, node, p=0.1):
         return friend
     return None
 
-def maybe_make_friend(graph, node, p=0.1, acc_fn=lambda me, you: math.exp(abs(me.ideo-you.ideo))):
+def maybe_make_friend(graph, node, p=0.1, acc_fn=lambda me, you: math.exp(-abs(me.ideo-you.ideo))):
     if rand.random()<=(node.capacity - sum_friend_weights(graph,node))/node.capacity:
-        friend = make_friend(graph,node,p)
+        friend = get_potential_friend(graph,node,p)
         if friend == None:
             return None
         if rand.random()<=acc_fn(node, friend):
