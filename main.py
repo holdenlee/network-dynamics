@@ -8,7 +8,7 @@ class Person(object):
     def __init__(self,id_num=None,ideo=None):
         self.id_num = id_num if id_num!=None else Person.population
         Person.population += 1
-        self.ideo = ideo if ideo!=None else rand.random()
+        self.ideo = ideo if ideo!=None else rand.uniform(-1,1)
     def __eq__(self,other):
         return self.id_num==other.id_num
     def __hash__(self):
