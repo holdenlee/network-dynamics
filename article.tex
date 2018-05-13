@@ -4,9 +4,65 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage[left=1in,right=1in,top=1in,bottom=1in]{geometry}
+
+\usepackage[explicit]{titlesec}
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*{\refname}}{}{}{}
+\titleformat{\section}
+  {\normalfont}{\thesection}{1em}{\MakeUppercase{#1}\centering}
+\titleformat{\subsection}
+  {\normalfont \bfseries}{\thesubsection}{1em}{\bfseries{#1}}  
+\usepackage [english]{babel}
+\usepackage [autostyle, english = american]{csquotes}
+\MakeOuterQuote{"}  
+
 \author{Ben Edelman, Sara Fridovich-Keil, Holden Lee}
 \title{Recommending Friends to Reduce Polarization}
 \begin{document}
 \maketitle
-Words!
+
+\section{Introduction and Motivation}
+Friendship networks in the physical world tend to polarize; people tend to make friends with like-minded people. In virtual social networks, such as Facebook, this polarization can be directly observed and quantified. In 2015, an internal Facebook study by Bakshy et al. \cite{bakshy} showed that the news content that users see is polarized to align with the user?s political preference, and suggested that a large fraction of this news polarization is the result of the structural polarization in the friendship network. People are predominantly friends with politically like-minded people, and therefore tend to see shared news articles that predominantly agree with their existing political leaning. 
+
+Our goal is to simulate this ideological polarization of friendships in a random friend network, in which the friendships can evolve over time to reflect both natural, real-world changes and the effects of algorithmic friend recommendations. Specifically, we hope to model the effects of various friend recommendation algorithms on the ideological polarization of a synthetic friendship network. Do the algorithms currently used by Facebook and other online social networks influence the polarization of the network? If these algorithms increase polarization, are there alternative recommendation algorithms that counteract polarization? 
+
+
+\section{Prior Work}
+
+\section{Methods}
+
+\section{Results}
+
+\section{Discussion and Future Work}
+
+\section{References}
+\begin{thebibliography}{}
+
+\bibitem{bakshy} E. Bakshy, S. Messing, and L. A. Adamic, "Exposure to ideologically diverse news and opinion on Facebook," \textit{Science}, vol. 348, iss. 6239, pp. 1130-1132, 2015.
+
+\bibitem{helbing} D. Helbing, \textit{Social Self-Organization}. Berlin: Springer Berlin, 2014, pp. 25-70.
+
+\bibitem{epstein} J. M. Epstein and R. Axtell, \textit{Growing Artificial Societies: Social Science from the Bottom Up}. Washington, DC: Brookings Institution Press, 1996.
+
+\bibitem{zeggelink} E. Zeggelink, "Evolving friendship networks: An individual-oriented approach implementing similarity," \textit{Social Networks}, vol. 17, iss. 2, pp. 83-110, 1995.
+
+\bibitem{robinsselection} G. Robins, P. Elliott, P. Pattison, "Network models for social selection processes," \textit{Social Networks}, vol. 23, iss. 1, pp. 1-30, 2001.
+
+\bibitem{robinsinfluence} G. Robins, P. Pattison, and P. Elliott, "Network models for social influence processes," \textit{Psychometrika}, vol. 66, iss. 2, pp. 161-189, 2001.
+
+\bibitem{steglich} C. Steglich, T. A. B. Snijders, and M. Pearson, "Dynamic networks and behavior: Separating selection from influence," \textit{Sociological Methodology}, vol. 40, iss. 1, pp. 329-393, 2010.
+
+\bibitem{chaoji} V. Chaoji, S. Ranu, R. Rastogi, and R. Bhatt, "Recommendations to boost content spread in social networks," in \textit{Proceedings of the 21st International Conference on the World Wide Web}, 16-20 April 2012, Lyon, France.
+
+
+
+
+
+
+
+
+
+
+\end{thebibliography}
+
 \end{document}
