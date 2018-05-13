@@ -24,7 +24,19 @@ def clamp(x,lo=0,hi=1):
     return lo if x<lo else \
            hi if x>hi else x
 
-def update_friendships(graph, node, sigma=0.1):
+def new_ideo(graph,node,wt=0.9,noise=0.05):
+    s = sum_friend_weights(graph,node)
+    return clamp(wt*node.ideo 
+        + ((1-wt)*sum([nbr.ideo*graph.adj[node][nbr]['weight'] for nbr in graph.adj[node]])/s
+                 if s!=0 else (1-wt)*node.ideo)
+        + rand.gauss(0,noise),-1,1)
+
+def update_ideos(graph, wt=0.9,noise=0.05):
+    ideos = [new_ideo(graph,node,wt,noise) for node in graph.nodes()]
+    for (node, ideo) in zip(graph.nodes(),ideos):
+        node.ideo = ideo
+        
+def update_friendships(graph, node, sigma=0.05):
     dels = []
     for nbr in graph.adj[node]:
         graph.adj[node][nbr]['weight']= clamp(graph.adj[node][nbr]['weight'] + rand.gauss(0,sigma))
@@ -77,8 +89,11 @@ def sample(li):
         return None
     return li[rand.randint(0,len(li)-1)]
 
-def loop_step(graph,sigma=0.1,p=0.1,acc_fn=lambda me, you: math.exp(-abs(me.ideo-you.ideo))):
+def loop_step(graph,sigma=0.1,p=0.1,
+              acc_fn=lambda me, you: math.exp(-abs(me.ideo-you.ideo)),
+              wt=0.9,noise=0.05):
     for node in graph.nodes():
+        update_ideos(graph, wt, noise)
         update_friendships(graph,node,sigma)
         maybe_make_friend(graph,node,p,acc_fn)
 
