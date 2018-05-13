@@ -21,7 +21,6 @@ def clamp(x,lo,hi):
 def update_friendships(graph, node, sigma):
     for nbr in graph.adj[node]:
         graph.adj[node][neighbor]['weight']+=rand.gauss(0,sigma)
-    pass
 
 def step_rand_walk(graph, node):
     #print(node)
