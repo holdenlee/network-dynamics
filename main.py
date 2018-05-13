@@ -32,7 +32,7 @@ def update_friendships(graph, node, sigma=0.1):
 
 def make_friend(graph, node, p=0.1):
     if rand.random()<p:
-        friend = sample(graph.nodes())
+        friend = sample(list(graph.nodes()))
     else:
         f = step_rand_walk(graph,node)
         if f==None:
@@ -41,7 +41,7 @@ def make_friend(graph, node, p=0.1):
         if friend==None:
             return
     if not (friend == None or node == friend or friend in graph.adj[node]):
-        graph.add_edge(node, friend, {'weight':0.5})
+        graph.add_edge(node, friend, weight=0.5)
         return friend
 
 def maybe_make_friend(graph, node, p=0.1):
