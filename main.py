@@ -77,10 +77,10 @@ def sample(li):
         return None
     return li[rand.randint(0,len(li)-1)]
 
-def loop_step(graph,sigma=0.1,p=0.1):
+def loop_step(graph,sigma=0.1,p=0.1,acc_fn=lambda me, you: math.exp(-abs(me.ideo-you.ideo))):
     for node in graph.nodes():
         update_friendships(graph,node,sigma)
-        maybe_make_friend(graph,node,p)
+        maybe_make_friend(graph,node,p,acc_fn)
 
 def init_graph(pop):
     nodes = [Person() for i in range(pop)]
