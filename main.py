@@ -1,6 +1,7 @@
 # %load main.py
 import networkx as nx
 import random as rand
+import itertools
 from utils import *
 import math
 
@@ -49,7 +50,10 @@ def update_friendships(graph, node, sigma=0.05):
         graph.remove_edge(node,nbr)
 
 def get_potential_friend(graph, node, p=0.1):
-    if rand.random()<p:
+    if graph.degree(node) >= 1 and rand.random()<0.1:
+        fofs = list(itertools.chain.from_iterable([graph.adj[f1] for f1 in graph.adj[node]]))
+        return min(fofs,key=lambda v:abs(node.ideo-v.ideo))
+    elif rand.random()<p:
         friend = sample(list(graph.nodes()))
     else:
         f = step_rand_walk(graph,node)
@@ -63,8 +67,7 @@ def get_potential_friend(graph, node, p=0.1):
         return friend
     return None
 
-def maybe_make_friend(graph, node, p=0.1, acc_fn=lambda me, you: math.exp(abs(me.ideo-you.ideo))
-                     ):
+def maybe_make_friend(graph, node, p=0.1, acc_fn=lambda me, you: math.exp(abs(me.ideo-you.ideo))):
     if rand.random()<=(node.capacity - sum_friend_weights(graph,node))/node.capacity:
         friend = get_potential_friend(graph,node,p)
         if friend == None:
