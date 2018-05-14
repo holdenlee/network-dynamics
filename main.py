@@ -49,10 +49,13 @@ def update_friendships(graph, node, sigma=0.05):
     for nbr in dels:
         graph.remove_edge(node,nbr)
 
-def get_potential_friend(graph, node, p=0.1):
-    if graph.degree(node) >= 1 and rand.random()<0.1:
+def get_potential_friend(graph, node, recommender_prob, recommender, p=0.1):
+    if graph.degree(node) >= 1 and rand.random()<recommender_prob:
         fofs = list(itertools.chain.from_iterable([graph.adj[f1] for f1 in graph.adj[node]]))
-        return min(fofs,key=lambda v:abs(node.ideo-v.ideo))
+        if recommender == 'min':
+            return min(fofs,key=lambda v:abs(node.ideo-v.ideo))
+        else:
+            return max(fofs,key=lambda v:abs(node.ideo-v.ideo))
     elif rand.random()<p:
         friend = sample(list(graph.nodes()))
     else:
@@ -67,9 +70,10 @@ def get_potential_friend(graph, node, p=0.1):
         return friend
     return None
 
-def maybe_make_friend(graph, node, p=0.1, acc_fn=lambda me, you: math.exp(abs(me.ideo-you.ideo))):
+def maybe_make_friend(graph, node, p=0.1, acc_fn=lambda me, you: math.exp(abs(me.ideo-you.ideo)),
+                      recommender_prob = .1, recommender = 'min'):
     if rand.random()<=(node.capacity - sum_friend_weights(graph,node))/node.capacity:
-        friend = get_potential_friend(graph,node,p)
+        friend = get_potential_friend(graph,node,recommender_prob, recommender, p)
         if friend == None:
             return None
         if rand.random()<=acc_fn(node, friend):
@@ -98,12 +102,12 @@ def sample(li):
 
 def loop_step(graph,sigma=0.05,p=0.1,
               acc_fn=lambda me, you: math.exp(-abs(me.ideo-you.ideo)), influence=False,
-              wt=0.9,noise=0):
+              wt=0.9,noise=0, recommender_prob = .1, recommender = 'min'):
     for node in graph.nodes():
         if influence:
             update_ideos(graph, wt, noise)
         update_friendships(graph,node,sigma)
-        maybe_make_friend(graph,node,p,acc_fn)
+        maybe_make_friend(graph,node,p,acc_fn, recommender_prob, recommender)
 
 def init_graph(pop):
     nodes = [Person(capacity=rand.randint(2,5)) for i in range(pop)]
