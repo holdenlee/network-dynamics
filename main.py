@@ -1,3 +1,4 @@
+# %load main.py
 import networkx as nx
 import random as rand
 from utils import *
@@ -32,14 +33,16 @@ def new_ideo(graph,node,wt=0.9,noise=0.05):
         + rand.gauss(0,noise),-1,1)
 
 def update_ideos(graph, wt=0.9,noise=0.05):
-    ideos = [new_ideo(graph,node,wt,noise) for node in graph.nodes()]
+    #ideos = [new_ideo(graph,node,wt,noise) for node in graph.nodes()]
+    ideos = [new_ideo(graph,node,.8+.2*abs(node.ideo),noise) for node in graph.nodes()]
     for (node, ideo) in zip(graph.nodes(),ideos):
         node.ideo = ideo
         
 def update_friendships(graph, node, sigma=0.05):
     dels = []
     for nbr in graph.adj[node]:
-        graph.adj[node][nbr]['weight']= clamp(graph.adj[node][nbr]['weight'] + rand.gauss(0,sigma))
+        graph.adj[node][nbr]['weight']= clamp(graph.adj[node][nbr]['weight'] #- .1*(abs(node.ideo-nbr.ideo)-1)
+                                              + rand.gauss(0,sigma))
         if graph.adj[node][nbr]['weight']==0:
             dels +=[nbr]
     for nbr in dels:
@@ -60,7 +63,7 @@ def get_potential_friend(graph, node, p=0.1):
         return friend
     return None
 
-def maybe_make_friend(graph, node, p=0.1, acc_fn=lambda me, you: math.exp(-abs(me.ideo-you.ideo))):
+def maybe_make_friend(graph, node, p=0.1, acc_fn=lambda me, you: math.exp(10*abs(me.ideo-you.ideo))):
     if rand.random()<=(node.capacity - sum_friend_weights(graph,node))/node.capacity:
         friend = get_potential_friend(graph,node,p)
         if friend == None:
@@ -89,16 +92,17 @@ def sample(li):
         return None
     return li[rand.randint(0,len(li)-1)]
 
-def loop_step(graph,sigma=0.1,p=0.1,
-              acc_fn=lambda me, you: math.exp(-abs(me.ideo-you.ideo)),
-              wt=0.9,noise=0.05):
+def loop_step(graph,sigma=0.05,p=0.1,
+              acc_fn=lambda me, you: math.exp(-abs(me.ideo-you.ideo)), influence=False,
+              wt=0.9,noise=0):
     for node in graph.nodes():
-        update_ideos(graph, wt, noise)
+        if influence:
+            update_ideos(graph, wt, noise)
         update_friendships(graph,node,sigma)
         maybe_make_friend(graph,node,p,acc_fn)
 
 def init_graph(pop):
-    nodes = [Person() for i in range(pop)]
+    nodes = [Person(capacity=rand.randint(2,5)) for i in range(pop)]
     G=nx.Graph()
     G.add_nodes_from(nodes)
     return G
@@ -118,11 +122,3 @@ def test():
     p=Person()
     q=Person()
     print(Person.population)
-    
-#if __name__=='__main__':
-#    #test()
-#    G=init_graph(10)
-#    for t in range(100):
-#        loop_step(G)
-#        if t%10==0:
-#            nx.draw(G)
