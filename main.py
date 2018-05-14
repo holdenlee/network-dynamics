@@ -37,11 +37,11 @@ def update_ideos(graph, wt=0.9,noise=0.05):
     ideos = [new_ideo(graph,node,.8+.2*abs(node.ideo),noise) for node in graph.nodes()]
     for (node, ideo) in zip(graph.nodes(),ideos):
         node.ideo = ideo
-        
+
 def update_friendships(graph, node, sigma=0.05):
     dels = []
     for nbr in graph.adj[node]:
-        graph.adj[node][nbr]['weight']= clamp(graph.adj[node][nbr]['weight'] #- .1*(abs(node.ideo-nbr.ideo)-1)
+        graph.adj[node][nbr]['weight']= clamp(graph.adj[node][nbr]['weight'] - .01*(abs(node.ideo-nbr.ideo)-1)
                                               + rand.gauss(0,sigma))
         if graph.adj[node][nbr]['weight']==0:
             dels +=[nbr]
@@ -63,7 +63,8 @@ def get_potential_friend(graph, node, p=0.1):
         return friend
     return None
 
-def maybe_make_friend(graph, node, p=0.1, acc_fn=lambda me, you: math.exp(10*abs(me.ideo-you.ideo))):
+def maybe_make_friend(graph, node, p=0.1, acc_fn=lambda me, you: math.exp(abs(me.ideo-you.ideo))
+                     ):
     if rand.random()<=(node.capacity - sum_friend_weights(graph,node))/node.capacity:
         friend = get_potential_friend(graph,node,p)
         if friend == None:
